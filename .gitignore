@@ -37,3 +37,7 @@ google-services.json
 
 expo-env.d.ts
 # @end expo-cli
+
+/node_modules/**
+~/android/**/*
+~/ios/**
