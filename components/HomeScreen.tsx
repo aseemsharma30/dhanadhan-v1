@@ -1,15 +1,14 @@
-// app/(tabs)/index.tsx
-import React, { useState, useContext } from 'react';
+// screens/HomeScreen.tsx
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import HomeSection from '../../components/HomeSection';
-import ExpandedView from '../../components/ExpandedView';
-import CustomDropdown from '../../components/CustomDropdown';
-import SearchBar from '../../components/SearchBar';
-import ClothingCategories from '../../components/ClothingCategories';
-import BillActions from '../../components/BillActions';
-import BottomTabBar from '../../components/BottomTabBar';
+import HomeSection from '../components/HomeSection';
+import ExpandedView from '../components/ExpandedView';
+import CustomDropdown from '../components/CustomDropdown';
+import SearchBar from '../components/SearchBar';
+import ClothingCategories from '../components/ClothingCategories';
+import BillActions from '../components/BillActions';
 
-export default function Home() {
+export default function HomeScreen() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [data, setData] = useState({
     todayActual: 1850,
@@ -51,7 +50,6 @@ export default function Home() {
         </View>
       </ScrollView>
       <BillActions />
-      <BottomTabBar />
     </View>
   );
 }

@@ -1,3 +1,5 @@
+// app/login.tsx
+
 import React, { useState, useContext } from 'react';
 import {
   View,
@@ -10,8 +12,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-// Import router from expo-router instead of using useNavigation
+import { AuthContext } from '../../context/AuthContext';
 import { router } from 'expo-router';
 
 const LoginScreen = () => {
@@ -55,36 +56,14 @@ const LoginScreen = () => {
       console.log('Response:', data);
 
       if (data.code === 200) {
-        // First update the authentication context
+        // Update the authentication context
         login({
           userId: data.youOweMeId,
           email: email,
         });
 
-        console.log("Login successful, attempting navigation...");
-
-        try {
-          // Using Expo Router to navigate to the index page
-          router.replace('/Home');
-
-          // Alternative approaches you can try if the above doesn't work:
-          // 1. Navigate to a specific tab
-          // router.replace('/(tabs)');
-          //
-          // 2. Navigate with params
-          // router.replace({
-          //   pathname: '/',
-          //   params: { authenticated: true }
-          // });
-        } catch (navError) {
-          console.error("Navigation error:", navError);
-          Alert.alert(
-            'Navigation Error',
-            'Login was successful but there was an error navigating to the home screen. Error: ' +
-            (navError instanceof Error ? navError.message : String(navError))
-          );
-        }
-
+        console.log("Login successful, navigating to home...");
+        router.replace('/(tabs)');
       } else {
         Alert.alert(
           'Login Failed',
@@ -189,7 +168,7 @@ const LoginScreen = () => {
     </KeyboardAvoidingView>
   );
 };
-export default LoginScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -343,3 +322,5 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   }
 });
+
+export default LoginScreen;

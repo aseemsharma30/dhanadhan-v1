@@ -1,76 +1,83 @@
 // context/AuthContext.tsx
+
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Define types
 type User = {
   userId: string;
   email: string;
-  // Add other user properties as needed
 };
 
 type AuthContextType = {
-  user: User | null;
+  isAuthenticated: boolean;
   isLoading: boolean;
-  login: (userData: User) => void;
+  user: User | null;
+  login: (user: User) => void;
   logout: () => void;
 };
 
-// Create the context
 export const AuthContext = createContext<AuthContextType>({
-  user: null,
+  isAuthenticated: false,
   isLoading: true,
+  user: null,
   login: () => {},
   logout: () => {},
 });
 
-// Create the provider component
-export const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
-  // Check for stored user data when the app starts
+  // Check for stored user on component mount
   useEffect(() => {
-    const loadStoredUser = async () => {
+    const bootstrapAsync = async () => {
       try {
-        const userJSON = await AsyncStorage.getItem('user');
-        if (userJSON) {
-          setUser(JSON.parse(userJSON));
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+          setIsAuthenticated(true);
         }
-      } catch (error) {
-        console.error('Failed to load user from storage', error);
+      } catch (e) {
+        console.error('Failed to restore authentication state:', e);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadStoredUser();
+    bootstrapAsync();
   }, []);
 
-  // Login function
   const login = async (userData: User) => {
     try {
-      // Store user data in AsyncStorage for persistence
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
-    } catch (error) {
-      console.error('Failed to store user data', error);
+      setIsAuthenticated(true);
+    } catch (e) {
+      console.error('Failed to store user data:', e);
     }
   };
 
-  // Logout function
   const logout = async () => {
     try {
-      // Remove user data from AsyncStorage
       await AsyncStorage.removeItem('user');
       setUser(null);
-    } catch (error) {
-      console.error('Failed to remove user data', error);
+      setIsAuthenticated(false);
+    } catch (e) {
+      console.error('Failed to remove user data:', e);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        isLoading,
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

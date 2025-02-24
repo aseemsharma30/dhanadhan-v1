@@ -1,37 +1,35 @@
+// components/HomeSection.tsx
+
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const HomeSection = ({ title, value, isOverview }) => {
+type HomeSectionProps = {
+  title: string;
+  value: number;
+};
+
+const HomeSection = ({ title, value }: HomeSectionProps) => {
   return (
-    <View style={[styles.container, isOverview && styles.overviewContainer]}>
-      <Text style={[styles.title, isOverview && styles.overviewTitle]}>{title}</Text>
-      <Text style={[styles.value, isOverview && styles.overviewValue]}>+{value}</Text>
+    <View style={styles.container}>
+      <Text style={styles.value}>+{value}</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'flex-start'
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
+    alignItems: 'flex-start',
   },
   value: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#008000',
+    color: '#008000', // Green color for positive values
   },
-  overviewContainer: {
-    backgroundColor: 'grey', // Change the container background to grey
-  },
-  overviewTitle: {
-    color: 'grey', // Change the title text color to grey
-  },
-  overviewValue: {
-    color: 'grey', // Change the value text color to grey
+  title: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
   },
 });
 
