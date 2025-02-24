@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { Dimensions } from 'react-native';
 
+const screenWidth = Dimensions.get('window').width;
 const ExpandedView = ({ data, onCollapse }) => {
   return (
     <View style={styles.container}>
@@ -58,7 +60,8 @@ const ExpandedView = ({ data, onCollapse }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    width: screenWidth * 0.9, // 90% of screen width
+    alignSelf: 'center'
   },
   header: {
     flexDirection: 'row',
