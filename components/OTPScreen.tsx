@@ -13,7 +13,7 @@ import {
 import { router } from 'expo-router';
 
 const OTPScreen = () => {
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']); // Empty strings as default values
   const inputRefs = useRef([]);
 
   // Auto-focus on first input when screen loads
@@ -25,16 +25,15 @@ const OTPScreen = () => {
 
   const handleOtpChange = (value, index) => {
     // Only allow numbers
-    if (!/^\d*$/.test(value)) return;
+    if (value === '' || /^\d*$/.test(value)) {
+      const newOtp = [...otp];
+      newOtp[index] = value; // Update the OTP array
+      setOtp(newOtp);
 
-    // Create a new array with the updated value
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Auto-focus to next input if current input is filled
-    if (value && index < 3 && inputRefs.current[index + 1]) {
-      inputRefs.current[index + 1].focus();
+      // Auto-focus to next input if current input is filled
+      if (value && index < 5 && inputRefs.current[index + 1]) {
+        inputRefs.current[index + 1].focus();
+      }
     }
   };
 
@@ -45,16 +44,21 @@ const OTPScreen = () => {
     }
   };
 
-const handleVerify = () => {
-  const otpValue = otp.join('');
-  if (otpValue.length !== 4) {
-    alert('Please enter the complete OTP');
-    return;
-  }
+  const handleVerify = () => {
+    const otpValue = otp.join(''); // Join the OTP array into a single string
+    if (otpValue.length !== 6) {
+      alert('Please enter the complete OTP');
+      return;
+    }
 
-  // Navigate to the home screen within the tabbed layout
-  router.replace('/Home');
-};
+    // Navigate to the home screen within the tabbed layout
+    router.replace('/(tabs)/Home'); // Ensure navigation to the tabbed Home screen
+  };
+
+  const handleResend = () => {
+    // Add logic here for resending OTP (e.g., API call, alert, etc.)
+    alert('OTP resent successfully!');
+  };
 
   return (
     <KeyboardAvoidingView
@@ -75,28 +79,63 @@ const handleVerify = () => {
             <Text style={styles.appName}>DhanaDhan</Text>
           </View>
 
-          <View style={styles.otpContainer}>
-            {otp.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={(input) => (inputRefs.current[index] = input)}
-                style={styles.otpInput}
-                value={digit}
-                onChangeText={(value) => handleOtpChange(value, index)}
-                onKeyPress={(e) => handleKeyPress(e, index)}
-                keyboardType="number-pad"
-                maxLength={1}
-                selectTextOnFocus
-              />
-            ))}
+          <View style={styles.otpWrapper}>
+            <View style={styles.otpLeftContainer}>
+              {otp.slice(0, 3).map((digit, index) => (
+                <View key={index} style={styles.otpInputContainer}>
+                  <TextInput
+                    ref={(input) => (inputRefs.current[index] = input)}
+                    style={[
+                      styles.otpInput,
+                      digit && styles.otpInputHighlighted, // Highlight if a number is entered
+                    ]}
+                    value={digit}
+                    onChangeText={(value) => handleOtpChange(value, index)}
+                    onKeyPress={(e) => handleKeyPress(e, index)}
+                    keyboardType="number-pad"
+                    maxLength={1}
+                  />
+                  {!digit && (
+                    <Text style={styles.placeholder}>-</Text> // Show "-" as placeholder
+                  )}
+                </View>
+              ))}
+            </View>
+
+            {/* Spacer between the third and fourth OTP boxes */}
+            <View style={styles.spacer} />
+
+            <View style={styles.otpRightContainer}>
+              {otp.slice(3, 6).map((digit, index) => (
+                <View key={index + 3} style={styles.otpInputContainer}>
+                  <TextInput
+                    ref={(input) => (inputRefs.current[index + 3] = input)}
+                    style={[
+                      styles.otpInput,
+                      digit && styles.otpInputHighlighted, // Highlight if a number is entered
+                    ]}
+                    value={digit}
+                    onChangeText={(value) => handleOtpChange(value, index + 3)}
+                    onKeyPress={(e) => handleKeyPress(e, index + 3)}
+                    keyboardType="number-pad"
+                    maxLength={1}
+                  />
+                  {!digit && (
+                    <Text style={styles.placeholder}>-</Text> // Show "-" as placeholder
+                  )}
+                </View>
+              ))}
+            </View>
           </View>
 
-          <Text style={styles.otpInstructions}>
-            Don't receive an OTP? Resend
-          </Text>
+          <TouchableOpacity onPress={handleResend}>
+            <Text style={styles.otpInstructions}>
+              Didn't receive an OTP? <Text style={styles.resendText}>Resend</Text>
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity style={styles.verifyButton} onPress={handleVerify}>
-            <Text style={styles.verifyButtonText}>Verify</Text>
+            <Text style={styles.verifyButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -122,8 +161,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 63.85,
+    height: 93.84,
     resizeMode: 'contain',
   },
   logoPlaceholder: {
@@ -138,29 +177,60 @@ const styles = StyleSheet.create({
   },
   appName: {
     marginTop: 8,
-    fontSize: 18,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#000',
   },
-  otpContainer: {
+  otpWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center', // Ensure the spacer and OTP boxes are aligned
     marginBottom: 20,
+  },
+  otpLeftContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end', // Align boxes to the right within the left container
+  },
+  otpRightContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start', // Align boxes to the left within the right container
+  },
+  otpInputContainer: {
+    position: 'relative',
+    justifyContent: 'center', // Center the placeholder vertically
+    alignItems: 'center', // Center the placeholder horizontally
   },
   otpInput: {
     width: 40,
-    height: 40,
+    height: 45,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    marginHorizontal: 10,
+    marginHorizontal: 5, // Reduced margin for tighter spacing
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 17,
+    backgroundColor: 'transparent', // Ensure the input is transparent
+  },
+  otpInputHighlighted: {
+    borderColor: '#4357FE', // Blue border for highlighted boxes
+  },
+  placeholder: {
+    position: 'absolute',
+    textAlign: 'center',
+    fontSize: 17,
+    color: '#999', // Grey color for "-"
+    pointerEvents: 'none', // Ensure the placeholder doesn't interfere with input
+  },
+  spacer: {
+    width: 20, // Adjust the width to control the space between the third and fourth OTP boxes
   },
   otpInstructions: {
     textAlign: 'center',
     color: '#666',
     marginBottom: 30,
+  },
+  resendText: {
+    color: '#4357FE', // Blue color for "Resend"
   },
   verifyButton: {
     backgroundColor: '#4357FE',

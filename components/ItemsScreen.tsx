@@ -7,7 +7,12 @@ import {
   TextInput,
   FlatList,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
+  Modal,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -17,18 +22,44 @@ interface Item {
   price: number;
   category: string;
   initial: string;
+  tax?: number;
 }
 
 const ItemsScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Category name');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [itemName, setItemName] = useState<string>('');
+  const [itemCategory, setItemCategory] = useState<string>('Category Name');
+  const [itemPrice, setItemPrice] = useState<string>('');
+  const [itemTax, setItemTax] = useState<string>('18');
 
   const items: Item[] = [
     { id: '1', name: 'Churidhar Top', price: 498.00, category: 'Tops', initial: 'T' },
     { id: '2', name: 'Frok', price: 498.00, category: 'Dresses', initial: 'F' },
-    { id: '3', name: 'Blouse', price: 498.00, category: 'Tops', initial: 'B' },
+    { id: '3', name: 'Blouse', price: 498.00, category: 'Tops', initial: 'B', tax: 18 },
     { id: '4', name: 'Bottom', price: 498.00, category: 'Bottoms', initial: 'B' },
   ];
+
+  const handleEditItem = (item: Item) => {
+    setSelectedItem(item);
+    setItemName(item.name);
+    setItemCategory(item.category);
+    setItemPrice(item.price.toString());
+    setItemTax(item.tax?.toString() || '18');
+    setModalVisible(true);
+  };
+
+  const handleSaveItem = () => {
+    // Save item logic would go here
+    setModalVisible(false);
+  };
+
+  const handleDeleteItem = () => {
+    // Delete item logic would go here
+    setModalVisible(false);
+  };
 
   const renderItem = ({ item }: { item: Item }) => (
     <View style={styles.itemContainer}>
@@ -39,7 +70,7 @@ const ItemsScreen: React.FC = () => {
         <Text style={styles.itemName}>{item.name}</Text>
       </View>
       <Text style={styles.itemPrice}>₹{item.price.toFixed(2)}</Text>
-      <TouchableOpacity style={styles.editButton}>
+      <TouchableOpacity style={styles.editButton} onPress={() => handleEditItem(item)}>
         <Text style={styles.editButtonText}>Edit</Text>
       </TouchableOpacity>
     </View>
@@ -85,7 +116,17 @@ const ItemsScreen: React.FC = () => {
       />
 
       {/* Add Button */}
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => {
+          setSelectedItem(null);
+          setItemName('');
+          setItemCategory('Category Name');
+          setItemPrice('');
+          setItemTax('18');
+          setModalVisible(true);
+        }}
+      >
         <Ionicons name="add" size={24} color="#fff" />
       </TouchableOpacity>
 
@@ -107,6 +148,90 @@ const ItemsScreen: React.FC = () => {
           <Ionicons name="person" size={24} color="#888" />
         </TouchableOpacity>
       </View>
+
+      {/* Item Details Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.modalContainer}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Item details</Text>
+                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                  <Ionicons name="close" size={24} color="#000" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>Item name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={itemName}
+                  onChangeText={setItemName}
+                  placeholder="Enter item name"
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>Category</Text>
+                <TouchableOpacity style={styles.categoryInput}>
+                  <Text>{itemCategory}</Text>
+                  <Ionicons name="chevron-down" size={16} color="#000" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.formRow}>
+                <View style={[styles.formGroup, { flex: 1, marginRight: 10 }]}>
+                  <Text style={styles.label}>Price</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={itemPrice}
+                    onChangeText={setItemPrice}
+                    placeholder="Enter price"
+                    keyboardType="numeric"
+                  />
+                </View>
+
+                <View style={[styles.formGroup, { width: 100 }]}>
+                  <Text style={styles.label}>Tax</Text>
+                  <View style={styles.taxContainer}>
+                    <TextInput
+                      style={styles.taxInput}
+                      value={itemTax}
+                      onChangeText={setItemTax}
+                      keyboardType="numeric"
+                    />
+                    <Text style={styles.taxSymbol}>%</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.deleteButton]}
+                  onPress={handleDeleteItem}
+                >
+                  <Text style={styles.deleteButtonText}>Delete Item</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.saveButton]}
+                  onPress={handleSaveItem}
+                >
+                  <Text style={styles.saveButtonText}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -242,6 +367,101 @@ const styles = StyleSheet.create({
   activeTab: {
     borderTopWidth: 3,
     borderTopColor: '#4F7DF3',
+  },
+
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  formGroup: {
+    marginBottom: 20,
+  },
+  formRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 14,
+    color: '#888',
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 16,
+  },
+  categoryInput: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 16,
+  },
+  taxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+  },
+  taxInput: {
+    flex: 1,
+    padding: 12,
+    fontSize: 16,
+  },
+  taxSymbol: {
+    fontSize: 16,
+    color: '#888',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  actionButton: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteButton: {
+    backgroundColor: '#E74C3C',
+    marginRight: 10,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  saveButton: {
+    backgroundColor: '#4F7DF3',
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
