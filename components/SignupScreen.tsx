@@ -39,7 +39,7 @@ const SignupScreen = () => {
           <View style={styles.logoContainer}>
             <Image
 
-              source={require('../assets/images/dummyLogo.png')}
+              source={require('../assets/images/logo.png')}
               style={styles.logo}
               // If you don't have a logo image yet, remove the Image component and use the below View instead
               // <View style={styles.logoPlaceholder}>
