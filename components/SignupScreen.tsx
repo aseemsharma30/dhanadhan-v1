@@ -11,11 +11,16 @@ import {
   Image,
 } from 'react-native';
 import { router } from 'expo-router';
-import CountryPicker from 'react-native-country-picker-modal'; // You'll need to install this package
+import CountryPicker, { Country } from 'react-native-country-picker-modal'; // Import Country type
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
 
 const SignupScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
+  const [country, setCountry] = useState<Country>({
+    cca2: 'IN', // India’s country code (ISO 3166-1 alpha-2)
+    callingCode: ['91'], // India’s calling code (not shown in UI)
+    name: 'India',
+  });
   const [showCountryPicker, setShowCountryPicker] = useState(false);
 
   const handleSubmit = () => {
@@ -38,7 +43,6 @@ const SignupScreen = () => {
         <View style={styles.formContainer}>
           <View style={styles.logoContainer}>
             <Image
-
               source={require('../assets/images/logo.png')}
               style={styles.logo}
               // If you don't have a logo image yet, remove the Image component and use the below View instead
@@ -56,13 +60,16 @@ const SignupScreen = () => {
               style={styles.countryCodeContainer}
               onPress={() => setShowCountryPicker(true)}
             >
-              <Text style={styles.countryCode}>{countryCode}</Text>
-              <Text style={styles.dropdownIcon}>▼</Text>
+              <Image
+                source={{ uri: `https://flagcdn.com/24x18/${country.cca2.toLowerCase()}.png` }}
+                style={styles.flag}
+              />
+              <Ionicons name="chevron-down" size={16} color="#666" /> {/* Downward chevron (v-shaped) */}
             </TouchableOpacity>
 
             <TextInput
               style={styles.phoneInput}
-              placeholder="999 55 28772"
+              placeholder="999 55 29772"
               placeholderTextColor="#999"
               value={phoneNumber}
               onChangeText={setPhoneNumber}
@@ -74,12 +81,15 @@ const SignupScreen = () => {
             <CountryPicker
               visible={showCountryPicker}
               onClose={() => setShowCountryPicker(false)}
-              onSelect={(country) => {
-                setCountryCode('+' + country.callingCode[0]);
+              onSelect={(selectedCountry: Country) => {
+                setCountry(selectedCountry);
                 setShowCountryPicker(false);
               }}
               withFilter
+              withFlag
               withCallingCode
+              countryCode={country.cca2} // Default to India
+              flagSize={24} // Use a specific flag size to match the rectangular design
             />
           )}
 
@@ -114,8 +124,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 63.85,
+    height: 93.84,
     resizeMode: 'contain',
   },
   logoPlaceholder: {
@@ -130,7 +140,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     marginTop: 8,
-    fontSize: 18,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#000',
   },
@@ -141,9 +151,19 @@ const styles = StyleSheet.create({
   },
   phoneInputContainer: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    alignItems: 'center',
+    backgroundColor: '#ffffff', // White background for the input box
+    borderRadius: 8, // Rounded corners
+    borderWidth: 1, // Subtle border
+    borderColor: '#F3F5F9', // Light border color
     marginBottom: 30,
+    paddingHorizontal: 10,
+    height: 48, // Match the height in your image
+    shadowColor: '#000', // Shadow color for the bottom shadow
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset (bottom shadow)
+    shadowOpacity: 0.1, // Shadow opacity
+    shadowRadius: 4, // Shadow blur radius
+    elevation: 2, // Android elevation for shadow
   },
   countryCodeContainer: {
     flexDirection: 'row',
@@ -151,20 +171,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginRight: 10,
   },
-  countryCode: {
-    fontSize: 16,
-    color: '#000',
+  flag: {
+    width: 18, // Size of the flag image
+    height: 18, // Size of the flag image
+    // Removed borderRadius to make it rectangular with slight rounding
+    borderRadius: 18, // Slight rounding for a clean look (optional, adjust or remove as needed)
   },
-  dropdownIcon: {
-    fontSize: 12,
-    marginLeft: 5,
-    color: '#666',
+  countryCode: {
+    fontSize: 24, // Not used anymore since we’re using an image for the flag
+    color: '#000',
   },
   phoneInput: {
     flex: 1,
-    height: 40,
+    height: '100%',
     fontSize: 16,
     color: '#000',
+    paddingVertical: 10,
   },
   registerButton: {
     backgroundColor: '#4357FE',
