@@ -11,8 +11,8 @@ type HomeSectionProps = {
 const HomeSection = ({ title, value }: HomeSectionProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.value}>+{value}</Text>
       <Text style={styles.title}>{title}</Text>
+      <Text style={styles.value}>+{value}</Text>
     </View>
   );
 };
