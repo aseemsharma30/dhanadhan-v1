@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import LoginScreen from '../components/LoginScreen';
+import SignupScreen from '../components/SignupScreen';
 
 const LoginPage = () => {
   return (
     <View style={{ flex: 1 }}>
-      <LoginScreen />
+      <SignupScreen />
     </View>
   );
 };

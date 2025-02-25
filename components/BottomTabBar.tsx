@@ -1,46 +1,64 @@
-// components/BottomTabBar.tsx
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 
-const BottomTabBar = () => {
+const BottomTabBar = ({ state, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => console.log('Search pressed')}
+        onPress={() => navigation.navigate('search')}
       >
-        <Feather name="search" size={24} color="#999999" />
+        <Feather
+          name="search"
+          size={24}
+          color={state.index === 0 ? "#4A65FF" : "#999999"}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => console.log('Chart pressed')}
+        onPress={() => navigation.navigate('analytics')}
       >
-        <Feather name="pie-chart" size={24} color="#999999" />
+        <Feather
+          name="pie-chart"
+          size={24}
+          color={state.index === 1 ? "#4A65FF" : "#999999"}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => console.log('Home pressed')}
+        onPress={() => navigation.navigate('index')}
       >
-        <View style={styles.homeIconContainer}>
+        <View style={[
+          styles.homeIconContainer,
+          state.index === 2 && { backgroundColor: '#3A55EF' }
+        ]}>
           <FontAwesome name="home" size={20} color="#FFFFFF" />
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => console.log('Time pressed')}
+        onPress={() => navigation.navigate('history')}
       >
-        <Feather name="clock" size={24} color="#999999" />
+        <Feather
+          name="clock"
+          size={24}
+          color={state.index === 3 ? "#4A65FF" : "#999999"}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => console.log('Profile pressed')}
+        onPress={() => navigation.navigate('profile')}
       >
-        <Feather name="user" size={24} color="#999999" />
+        <Feather
+          name="user"
+          size={24}
+          color={state.index === 4 ? "#4A65FF" : "#999999"}
+        />
       </TouchableOpacity>
     </View>
   );
