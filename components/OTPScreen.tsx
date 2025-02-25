@@ -96,7 +96,9 @@ const OTPScreen = () => {
                     maxLength={1}
                   />
                   {!digit && (
-                    <Text style={styles.placeholder}>-</Text> // Show "-" as placeholder
+                    <View style={styles.placeholderContainer}>
+                      <Text style={styles.placeholder}>-</Text>
+                    </View>
                   )}
                 </View>
               ))}
@@ -121,7 +123,9 @@ const OTPScreen = () => {
                     maxLength={1}
                   />
                   {!digit && (
-                    <Text style={styles.placeholder}>-</Text> // Show "-" as placeholder
+                    <View style={styles.placeholderContainer}>
+                      <Text style={styles.placeholder}>-</Text>
+                    </View>
                   )}
                 </View>
               ))}
@@ -214,12 +218,18 @@ const styles = StyleSheet.create({
   otpInputHighlighted: {
     borderColor: '#4357FE', // Blue border for highlighted boxes
   },
-  placeholder: {
+  placeholderContainer: {
     position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+  },
+  placeholder: {
     textAlign: 'center',
     fontSize: 17,
     color: '#999', // Grey color for "-"
-    pointerEvents: 'none', // Ensure the placeholder doesn't interfere with input
   },
   spacer: {
     width: 20, // Adjust the width to control the space between the third and fourth OTP boxes
