@@ -18,7 +18,7 @@ const BottomTabBar = ({ state, navigation }) => {
 
       <TouchableOpacity
         style={styles.tabItem}
-        onPress={() => navigation.navigate('analytics')}
+        onPress={() => navigation.navigate('Items')}
       >
         <Feather
           name="pie-chart"

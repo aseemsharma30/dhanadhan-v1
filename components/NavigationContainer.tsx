@@ -12,6 +12,7 @@ export function NavigationContainer({ initialRoute }: NavigationContainerProps) 
   return (
     <Stack initialRouteName={initialRoute}>
       <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="Items" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>

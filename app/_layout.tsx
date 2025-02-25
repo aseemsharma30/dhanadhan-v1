@@ -9,7 +9,6 @@ export default function RootLayout() {
         {/* Authentication routes - no tabs */}
         <Stack.Screen name="index" /> {/* Signup screen */}
         <Stack.Screen name="otp" />   {/* OTP verification */}
-        <Stack.Screen name="login" /> {/* Login screen (if needed) */}
 
         {/* Main app with tabs - grouped together */}
         <Stack.Screen

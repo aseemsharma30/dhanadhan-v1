@@ -3,7 +3,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
-import InventoryScreen from '../app/+not-found';
+import ItemsScreen from '../ItemsScreen';
 import ReportsScreen from '../app/+not-found';
 import SettingsScreen from '../app/+not-found';
 import BottomTabBar from './BottomTabBar';
@@ -19,7 +19,7 @@ export default function MainTabNavigator() {
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Inventory" component={InventoryScreen} />
+      <Tab.Screen name="Items" component={ItemsScreen} />
       <Tab.Screen name="Reports" component={ReportsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
