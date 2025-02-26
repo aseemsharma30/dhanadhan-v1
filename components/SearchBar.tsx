@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Import an icon library
+import { Ionicons } from '@expo/vector-icons';
 
-const SearchBar = ({ placeholder, onChange }) => {
+const SearchBar = ({ placeholder, value, onChange }) => {
   return (
-    <View style={styles.container}>
-      <Ionicons name="search" size={20} color="#ccc" style={styles.icon} />
+    <View style={styles.searchContainer}>
+      <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
       <TextInput
-        style={styles.input}
-        placeholder={placeholder}
+        style={styles.searchInput}
+        placeholder={placeholder || "Search"}
+        value={value}
         onChangeText={onChange}
       />
     </View>
@@ -16,22 +17,31 @@ const SearchBar = ({ placeholder, onChange }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#ccc',
+    height: 55,
+    marginHorizontal: 24,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
     borderRadius: 8,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#F3F5F9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+    gap: 8,
   },
-  icon: {
-    marginLeft: 10,
+  searchIcon: {
+    marginRight: 10,
   },
-  input: {
+  searchInput: {
     flex: 1,
-    height: 50, // Adjusted height
-    paddingLeft: 10,
+    height: 55,
+    fontSize: 16,
   },
 });
 
