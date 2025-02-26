@@ -12,7 +12,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -102,9 +103,9 @@ const ItemsScreen: React.FC = () => {
 
       {/* Column Headers */}
       <View style={styles.columnHeaders}>
-        <Text style={[styles.columnHeader, { flex: 2 }]}>Item Name</Text>
-        <Text style={[styles.columnHeader, { flex: 1 }]}>Total</Text>
-        <Text style={[styles.columnHeader, { flex: 1 }]}>Action</Text>
+        <Text style={[styles.columnHeader, { flex: 2, textAlign: 'left' }]}>Item Name</Text>
+        <Text style={[styles.columnHeader, { flex: 1, textAlign: 'right' }]}>Total</Text>
+        <Text style={[styles.columnHeader, { flex: 1, textAlign: 'right' }]}>Action</Text>
       </View>
 
       {/* Items List */}
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingTop: 10,
     paddingBottom: 15,
   },
@@ -269,30 +270,43 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,
-    paddingHorizontal: 15,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 10,
+    height: 55,
+    marginHorizontal: 24,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#F3F5F9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+    gap: 8,
   },
   searchIcon: {
     marginRight: 10,
   },
   searchInput: {
     flex: 1,
-    height: 45,
+    height: 55,
     fontSize: 16,
   },
   columnHeaders: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
   columnHeader: {
-    fontSize: 14,
+    fontSize: 12,
+    fontWeight: '600',
+    lineHeight: 16,
     color: '#888',
+    fontFamily: 'Inter',
+    letterSpacing: 0,
   },
   listContent: {
     paddingBottom: 80, // Ensure space for add button
@@ -301,14 +315,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
   initialContainer: {
     width: 30,
     height: 30,
-    borderRadius: 6,
+    borderRadius: 15,  // Changed to circle
     backgroundColor: '#EEF1FD',
     justifyContent: 'center',
     alignItems: 'center',
@@ -328,21 +342,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: 80,
     textAlign: 'right',
+    fontWeight: '600',
   },
   editButton: {
     width: 60,
   },
   editButtonText: {
     color: '#4F7DF3',
-    textAlign: 'center',
+    textAlign: 'right',
+    fontWeight: '600',
   },
   addButton: {
     position: 'absolute',
-    right: 20,
+    right: 24,
     bottom: 80,
     width: 56,
     height: 56,
-    borderRadius: 28,
+    borderRadius: 8,  // Changed to rectangle with rounded corners
     backgroundColor: '#4F7DF3',
     justifyContent: 'center',
     alignItems: 'center',
