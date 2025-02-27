@@ -97,6 +97,7 @@ const ItemsScreen: React.FC = () => {
           style={styles.searchInput}
           placeholder="Search items"
           value={searchQuery}
+          placeholderTextColor="#000"
           onChangeText={setSearchQuery}
         />
       </View>
@@ -130,25 +131,6 @@ const ItemsScreen: React.FC = () => {
       >
         <Ionicons name="add" size={24} color="#fff" />
       </TouchableOpacity>
-
-      {/* Bottom Tab Bar */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="search" size={24} color="#888" />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.tabItem, styles.activeTab]}>
-          <Ionicons name="pie-chart" size={24} color="#4F7DF3" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="home" size={24} color="#888" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="time" size={24} color="#888" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <Ionicons name="person" size={24} color="#888" />
-        </TouchableOpacity>
-      </View>
 
       {/* Item Details Modal */}
       <Modal

@@ -57,6 +57,7 @@ export default function Homepage() {
         style={styles.searchInput}
         placeholder={placeholder || 'Search'}
         onChangeText={onChange}
+        placeholderTextColor="#000" // Added to make placeholder text black
       />
     </View>
   );
@@ -84,7 +85,7 @@ export default function Homepage() {
             />
           )}
           <View style={styles.searchBarContainer}>
-            <SearchBar placeholder="Search..." onChange={handleSearch} />
+            <SearchBar placeholder="Search" onChange={handleSearch} />
           </View>
           <ClothingCategories
             onSelectionChange={handleCategorySelectionChange}
