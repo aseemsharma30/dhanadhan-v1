@@ -34,7 +34,8 @@ export default function TabLayout() {
               isActive={state.index === 1}
               onPress={() => navigation.navigate('Items')}
             />
-            <TouchableHomeButton
+            <TouchableTabButton
+              name="home"
               isActive={state.index === 2}
               onPress={() => navigation.navigate('Home')}
             />
@@ -76,22 +77,6 @@ const TouchableTabButton = ({ name, isActive, onPress }) => {
   );
 };
 
-const TouchableHomeButton = ({ isActive, onPress }) => {
-  return (
-    <TouchableOpacity
-      style={styles.tabItem}
-      onPress={onPress}
-    >
-      <View style={[
-        styles.homeIconContainer,
-        isActive && { backgroundColor: '#3A55EF' }
-      ]}>
-        <FontAwesome name="home" size={20} color="#FFFFFF" />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -119,14 +104,6 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  homeIconContainer: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#4A65FF',
-    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
