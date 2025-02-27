@@ -6,8 +6,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import ExpandedView from './ExpandedView';
 import CustomDropdown from './CustomDropdown';
@@ -26,6 +27,7 @@ export default function Homepage() {
   });
 
   const { user } = useContext(AuthContext);
+  const insets = useSafeAreaInsets();
 
   const handleSearch = (text) => {
     console.log('Searching:', text);
@@ -52,28 +54,36 @@ export default function Homepage() {
   );
 
   // BillActions Component
-  const BillActions = () => (
-    <View style={styles.billActionsContainer}>
-      <TouchableOpacity
-        style={styles.billButton}
-        onPress={() => console.log('Bill it clicked')}
-      >
-        <Text style={styles.billButtonText}>Bill it</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.plusButton}
-        onPress={() => console.log('Plus clicked')}
-      >
-        <Text style={styles.plusButtonText}>+</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const BillActions = () => {
+    // Calculate the bottom position to account for the tab bar height (60px) plus any safe area insets
+    const bottomPosition = 70 + (Platform.OS === 'ios' ? insets.bottom : 0);
+
+    return (
+      <View style={[styles.billActionsContainer, { bottom: bottomPosition }]}>
+        <TouchableOpacity
+          style={styles.billButton}
+          onPress={() => console.log('Bill it clicked')}
+        >
+          <Text style={styles.billButtonText}>Bill it</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPress={() => console.log('Plus clicked')}
+        >
+          <Text style={styles.plusButtonText}>+</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
+        contentContainerStyle={[
+          styles.scrollViewContent,
+          { paddingBottom: 140 + (Platform.OS === 'ios' ? insets.bottom : 0) }
+        ]}
       >
         <View style={styles.content}>
           {!isExpanded ? (
@@ -108,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-    paddingBottom: 140, // To account for bottom tabs and bill actions
+    paddingBottom: 140, // Base padding will be adjusted dynamically
   },
   content: {
     flex: 1,
@@ -127,7 +137,7 @@ const styles = StyleSheet.create({
   homeSectionValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#008000', // Green color for positive values
+    color: '#4CAF50', // Green color for positive values - matched to your design
   },
   homeSectionTitle: {
     fontSize: 14,
@@ -166,15 +176,14 @@ const styles = StyleSheet.create({
   // BillActions Styles
   billActionsContainer: {
     position: 'absolute',
-    bottom: 50,
     left: 0,
     right: 0,
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingBottom: 16,
     gap: 12,
     alignItems: 'center',
     backgroundColor: 'transparent',
+    zIndex: 1000, // Ensure it's above other elements
   },
   billButton: {
     flex: 1,

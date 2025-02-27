@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   addButton: {
     position: 'absolute',
     right: 24,
-    bottom: 80,
+    bottom: Platform.OS === 'ios' ? 110 : 80,
     width: 56,
     height: 56,
     borderRadius: 8,  // Changed to rectangle with rounded corners
