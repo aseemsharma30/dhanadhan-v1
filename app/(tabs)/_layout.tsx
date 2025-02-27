@@ -27,7 +27,7 @@ export default function TabLayout() {
             <TouchableTabButton
               name="search"
               isActive={state.index === 0}
-              onPress={() => navigation.navigate('search')}
+              onPress={() => navigation.navigate('Search')}
             />
             <TouchableTabButton
               name="pie-chart"
@@ -36,17 +36,17 @@ export default function TabLayout() {
             />
             <TouchableHomeButton
               isActive={state.index === 2}
-              onPress={() => navigation.navigate('Index')}
+              onPress={() => navigation.navigate('Home')}
             />
             <TouchableTabButton
               name="clock"
               isActive={state.index === 3}
-              onPress={() => navigation.navigate('history')}
+              onPress={() => navigation.navigate('History')}
             />
             <TouchableTabButton
               name="user"
               isActive={state.index === 4}
-              onPress={() => navigation.navigate('profile')}
+              onPress={() => navigation.navigate('Profile')}
             />
           </View>
         </View>
