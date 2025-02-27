@@ -1,5 +1,5 @@
 // components/ClothingCategories.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -8,56 +8,116 @@ const buttonSize = (windowWidth - 80) / 4; // Adjust button size based on screen
 type CategoryButtonProps = {
   letter: string;
   label: string;
+  isSelected: boolean;
+  onPress: () => void;
 };
 
-const CategoryButton = ({ letter, label }: CategoryButtonProps) => (
+const CategoryButton = ({ letter, label, isSelected, onPress }: CategoryButtonProps) => (
   <View style={styles.categoryContainer}>
-    <TouchableOpacity style={styles.circleButton}>
-      <Text style={styles.buttonText}>{letter}</Text>
+    <TouchableOpacity
+      style={[
+        styles.circleButton,
+        isSelected && styles.selectedButton
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[
+        styles.buttonText,
+        isSelected && styles.selectedButtonText
+      ]}>
+        {letter}
+      </Text>
     </TouchableOpacity>
     <Text style={styles.buttonLabel}>{label}</Text>
   </View>
 );
 
-type CategoryGroupProps = {
-  title: string;
-  categories: Array<{ letter: string; label: string }>;
+type Category = {
+  id: string;
+  letter: string;
+  label: string;
 };
 
-const CategoryGroup = ({ title, categories }: CategoryGroupProps) => (
+type CategoryGroupProps = {
+  title: string;
+  categories: Category[];
+  selectedIds: string[];
+  onToggleSelect: (id: string) => void;
+};
+
+const CategoryGroup = ({ title, categories, selectedIds, onToggleSelect }: CategoryGroupProps) => (
   <View style={styles.groupContainer}>
     <Text style={styles.groupTitle}>{title}</Text>
     <View style={styles.categoryRow}>
-      {categories.map((category, index) => (
+      {categories.map((category) => (
         <CategoryButton
-          key={index}
+          key={category.id}
           letter={category.letter}
           label={category.label}
+          isSelected={selectedIds.includes(category.id)}
+          onPress={() => onToggleSelect(category.id)}
         />
       ))}
     </View>
   </View>
 );
 
-const ClothingCategories = () => {
-  const liningCategories = [
-    { letter: 'T', label: 'Top' },
-    { letter: 'B', label: 'Bottom' },
-    { letter: 'B', label: 'Blouse' },
-    { letter: 'F', label: 'Frock' },
+type ClothingCategoriesProps = {
+  onSelectionChange?: (selectedIds: string[]) => void;
+  selectedCategories?: string[];
+};
+
+const ClothingCategories = ({ onSelectionChange, selectedCategories: externalSelectedCategories }: ClothingCategoriesProps) => {
+  // State to track selected categories (use external state if provided)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(externalSelectedCategories || []);
+
+  // Toggle selection function
+  const toggleSelection = (id: string) => {
+    const newSelection = selectedCategories.includes(id)
+      ? selectedCategories.filter(categoryId => categoryId !== id)
+      : [...selectedCategories, id];
+
+    setSelectedCategories(newSelection);
+    if (onSelectionChange) {
+      onSelectionChange(newSelection);
+    }
+  };
+
+  // Update internal state when external state changes
+  useEffect(() => {
+    if (externalSelectedCategories) {
+      setSelectedCategories(externalSelectedCategories);
+    }
+  }, [externalSelectedCategories]);
+
+  const liningCategories: Category[] = [
+    { id: 'lining-top', letter: 'T', label: 'Top' },
+    { id: 'lining-bottom', letter: 'B', label: 'Bottom' },
+    { id: 'lining-blouse', letter: 'B', label: 'Blouse' },
+    { id: 'lining-frock', letter: 'F', label: 'Frock' },
   ];
 
-  const sadhaCategories = [
-    { letter: 'T', label: 'Top' },
-    { letter: 'B', label: 'Bottom' },
-    { letter: 'B', label: 'Blouse' },
-    { letter: 'F', label: 'Frock' },
+  const sadhaCategories: Category[] = [
+    { id: 'sadha-top', letter: 'T', label: 'Top' },
+    { id: 'sadha-bottom', letter: 'B', label: 'Bottom' },
+    { id: 'sadha-blouse', letter: 'B', label: 'Blouse' },
+    { id: 'sadha-frock', letter: 'F', label: 'Frock' },
   ];
 
   return (
     <View style={styles.container}>
-      <CategoryGroup title="Lining" categories={liningCategories} />
-      <CategoryGroup title="Sadha set" categories={sadhaCategories} />
+      <CategoryGroup
+        title="Lining"
+        categories={liningCategories}
+        selectedIds={selectedCategories}
+        onToggleSelect={toggleSelection}
+      />
+      <CategoryGroup
+        title="Sadha set"
+        categories={sadhaCategories}
+        selectedIds={selectedCategories}
+        onToggleSelect={toggleSelection}
+      />
     </View>
   );
 };
@@ -94,10 +154,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  selectedButton: {
+    backgroundColor: '#4A65FF', // Blue background for selected state
+  },
   buttonText: {
     fontSize: 20,
     fontWeight: '500',
     color: '#666',
+  },
+  selectedButtonText: {
+    color: '#FFFFFF', // White text for selected state
   },
   buttonLabel: {
     fontSize: 14,

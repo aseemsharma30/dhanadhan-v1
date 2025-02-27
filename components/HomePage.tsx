@@ -13,10 +13,13 @@ import { Ionicons } from '@expo/vector-icons';
 import ExpandedView from './ExpandedView';
 import CustomDropdown from './CustomDropdown';
 import ClothingCategories from './ClothingCategories';
+import BillActions from './BillActions';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Homepage() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   const [data, setData] = useState({
     todayActual: 1850,
     todayOutside: 2300,
@@ -31,6 +34,11 @@ export default function Homepage() {
 
   const handleSearch = (text) => {
     console.log('Searching:', text);
+  };
+
+  // Function to handle category selection updates
+  const handleCategorySelectionChange = (selectedIds) => {
+    setSelectedCategories(selectedIds);
   };
 
   // HomeSection Component
@@ -52,29 +60,6 @@ export default function Homepage() {
       />
     </View>
   );
-
-  // BillActions Component
-  const BillActions = () => {
-    // Calculate the bottom position to account for the tab bar height (60px) plus any safe area insets
-    const bottomPosition = 70 + (Platform.OS === 'ios' ? insets.bottom : 0);
-
-    return (
-      <View style={[styles.billActionsContainer, { bottom: bottomPosition }]}>
-        <TouchableOpacity
-          style={styles.billButton}
-          onPress={() => console.log('Bill it clicked')}
-        >
-          <Text style={styles.billButtonText}>Bill it</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.plusButton}
-          onPress={() => console.log('Plus clicked')}
-        >
-          <Text style={styles.plusButtonText}>+</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -101,10 +86,13 @@ export default function Homepage() {
           <View style={styles.searchBarContainer}>
             <SearchBar placeholder="Search..." onChange={handleSearch} />
           </View>
-          <ClothingCategories />
+          <ClothingCategories
+            onSelectionChange={handleCategorySelectionChange}
+            selectedCategories={selectedCategories}
+          />
         </View>
       </ScrollView>
-      <BillActions />
+      <BillActions selectedCount={selectedCategories.length} />
     </SafeAreaView>
   );
 }
@@ -172,48 +160,5 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 55,
     fontSize: 16,
-  },
-  // BillActions Styles
-  billActionsContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 12,
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    zIndex: 1000, // Ensure it's above other elements
-  },
-  billButton: {
-    flex: 1,
-    backgroundColor: '#4A65FF',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
-  billButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  plusButton: {
-    width: 48,
-    height: 48,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  plusButtonText: {
-    fontSize: 24,
-    color: '#4A65FF',
-    fontWeight: '500',
-  },
+  }
 });

@@ -1,17 +1,30 @@
-// components/BillActions.tsx
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const BillActions = () => {
+// BillActions Component that accepts selected count as a prop
+const BillActions = ({ selectedCount = 0 }) => {
+  const insets = useSafeAreaInsets();
+
+  // Calculate the bottom position to account for the tab bar height (60px) plus any safe area insets
+  const bottomPosition = 70 + (Platform.OS === 'ios' ? insets.bottom : 0);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.billActionsContainer, { bottom: bottomPosition }]}>
       <TouchableOpacity
         style={styles.billButton}
         onPress={() => console.log('Bill it clicked')}
       >
-        <Text style={styles.billButtonText}>Bill it</Text>
+        <Text style={styles.billButtonText}>
+          Bill it {selectedCount > 0 ? `(${selectedCount})` : ''}
+        </Text>
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.plusButton}
         onPress={() => console.log('Plus clicked')}
@@ -23,17 +36,16 @@ const BillActions = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  billActionsContainer: {
     position: 'absolute',
-    bottom: 50,
     left: 0,
     right: 0,
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingBottom: 16,
     gap: 12,
     alignItems: 'center',
     backgroundColor: 'transparent',
+    zIndex: 1000, // Ensure it's above other elements
   },
   billButton: {
     flex: 1,
@@ -56,10 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,

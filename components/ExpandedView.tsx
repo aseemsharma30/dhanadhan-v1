@@ -35,21 +35,21 @@ const ExpandedView = ({ data, onCollapse }) => {
       <View style={styles.financeRow}>
         <View style={styles.alignLeft}>
           <View style={styles.labelValuePair}>
-            <Text style={styles.label}>Income</Text>
+            <Text style={styles.label1}>Income</Text>
             <Text style={[styles.value, styles.incomeText]}>{data.income}</Text>
           </View>
           <View style={styles.labelValuePair}>
-            <Text style={styles.label}>Expense</Text>
+            <Text style={styles.label1}>Expense</Text>
             <Text style={[styles.value, styles.expenseText]}>{data.expense}</Text>
           </View>
         </View>
         <View style={styles.alignRight}>
           <View style={styles.labelValuePair}>
-            <Text style={styles.label}>to be received</Text>
+            <Text style={styles.label1}>to be received</Text>
             <Text style={[styles.value, styles.incomeText]}>{data.toBeReceived}</Text>
           </View>
           <View style={styles.labelValuePair}>
-            <Text style={styles.label}>to be spent</Text>
+            <Text style={styles.label1}>to be spent</Text>
             <Text style={[styles.value, styles.expenseText]}>{data.toBeSpent}</Text>
           </View>
         </View>
@@ -92,6 +92,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: '#666',
+  },
+  label1: {
+    fontWeight: 'bold',
   },
   value: {
     fontSize: 16,
