@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,11 +18,13 @@ export default function TabLayout() {
         },
       }}
       tabBar={({ state, navigation }) => (
-        <View style={[
-          styles.container,
-          // Add bottom padding based on safe area insets
-          { paddingBottom: Platform.OS === 'ios' ? insets.bottom : 0 }
-        ]}>
+        <View
+          style={[
+            styles.container,
+            // Add bottom padding based on safe area insets
+            { paddingBottom: Platform.OS === 'ios' ? insets.bottom : 0 },
+          ]}
+        >
           <View style={styles.tabBar}>
             <TouchableTabButton
               name="search"
@@ -53,11 +55,11 @@ export default function TabLayout() {
         </View>
       )}
     >
-      <Tabs.Screen name="search" />
+      <Tabs.Screen name="Search" />
       <Tabs.Screen name="Items" />
-      <Tabs.Screen name="Index" />
-      <Tabs.Screen name="history" />
-      <Tabs.Screen name="profile" />
+      <Tabs.Screen name="Home" />
+      <Tabs.Screen name="History" />
+      <Tabs.Screen name="Profile" />
     </Tabs>
   );
 }
@@ -68,11 +70,13 @@ const TouchableTabButton = ({ name, isActive, onPress }) => {
       style={styles.tabItem}
       onPress={onPress}
     >
-      <Feather
-        name={name}
-        size={24}
-        color={isActive ? "#4A65FF" : "#999999"}
-      />
+      <View style={[styles.iconContainer, isActive && styles.activeIconContainer]}>
+        <Feather
+          name={name}
+          size={24}
+          color={isActive ? '#FFFFFF' : '#999999'} // White icon for active tab, gray for inactive
+        />
+      </View>
     </TouchableOpacity>
   );
 };
@@ -106,5 +110,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20, // Make it circular
+    backgroundColor: '#FFFFFF', // White background for all icons
+  },
+  activeIconContainer: {
+    backgroundColor: '#4A65FF', // Blue background for active tab
   },
 });
