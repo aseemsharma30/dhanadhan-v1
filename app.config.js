@@ -7,12 +7,19 @@ export default {
     splash: {
       image: './assets/images/logo.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff', // Match this to your app's background color
+      backgroundColor: '#ffffff',
     },
-    // Configure the status bar to match your splash screen
     statusBar: {
-      backgroundColor: '#ffffff', // Match this to your splash screen background
-      barStyle: 'dark-content', // Use 'light-content' if your logo is light-colored
+      backgroundColor: '#ffffff',
+      barStyle: 'dark-content',
     },
-  },
+    extra: {
+      eas: {
+        projectId: "7a452961-afde-4d89-b9aa-75f1792d3437"
+      }
+    },
+    android: {
+      package: "com.yourcompany.yourappname"
+    }
+  }
 };
